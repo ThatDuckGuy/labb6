@@ -17,7 +17,7 @@ public class Simulator {
 
     /**
      * Konstruktor för simulatorn.
-     * Genom att ta in ett State-objekt kan flera simuleringar köras oberoende av varandra.
+     * Genom att ta in ett State-objekt kan flera simuleringar köras oberoende av varandra..
      */
     public Simulator(State state) {
         this.state = state;
