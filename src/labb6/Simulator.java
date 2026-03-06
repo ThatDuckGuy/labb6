@@ -25,7 +25,7 @@ public class Simulator {
     }
 
     /**
-     * Lägger till en ny händelse i händelsekön (EQ).
+     * Lägger till en ny händelse i händelsekön.
      */
     public void addEvent(Event e) {
         eventQueue.add(e);
