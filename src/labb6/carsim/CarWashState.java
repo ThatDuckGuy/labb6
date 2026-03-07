@@ -20,7 +20,7 @@ public class CarWashState extends State {
 	CarFactory carFactory;
 	private double carwashIdleTime;
 	private double totalQueueTime, meanQueueTime;
-	private int rejectedCars, carsRemoved;
+	private int rejectedCars;
 	private double lastEventTime;
 
 	/**
@@ -53,7 +53,6 @@ public class CarWashState extends State {
 		this.totalQueueTime = 0.0;
 		this.meanQueueTime = 0.0;
 		this.rejectedCars = 0;
-		this.carsRemoved = 0;
 		this.lastEventTime = 0;
 	}
 
@@ -125,34 +124,26 @@ public class CarWashState extends State {
 		Car currentCar = carQueue.poll();
 
 		if (currentCar != null) {
-			carsRemoved++;
-
-			updateWaitTime(currentCar);
-
+		
 			return currentCar;
 		}
 		return null;
 	}
 
-	/**
-	 * Beräknar den totala kötiden och medel kö tiden. Kallas varje gång en bil
-	 * lämnar kön.
-	 * 
-	 * @param currentCar den bil som lämnar kön
-	 */
-	void updateWaitTime(Car currentCar) {
-		double carQueueTime = getCurrentTime() - currentCar.getArrivalTime();
-		totalQueueTime += carQueueTime;
-		meanQueueTime = totalQueueTime / carsRemoved;
-	}
-
+	
 	/**
 	 * Beräknar mängden idle time per biltvätt som skapats mellan två event. Denna
 	 * metod ska kallas först vid varje event.
 	 */
-	void updateIdleTime() {
+	void updateStatistics() {
 		double timeBetweenEvent = getCurrentTime() - lastEventTime;
-
+		
+		totalQueueTime += timeBetweenEvent * carQueue.size();
+		if(carFactory.getNumberOfCars() > 0) {
+			meanQueueTime = totalQueueTime / carFactory.getNumberOfCars();
+		}
+	
+		
 		int idleCarWashes = freeFastWash + freeSlowWash;
 
 		carwashIdleTime += idleCarWashes * timeBetweenEvent;
@@ -246,7 +237,7 @@ public class CarWashState extends State {
 	 * Ökar antalet lediga långsamma biltvättar med 1 ifall mänden inte överskrider
 	 * antalet existerande långsamma biltvättar
 	 */
-	private void freeUpSlowWash() {
+	void freeUpSlowWash() {
 		if (getFreeSlowWash() < slowWash) {
 			freeSlowWash++;
 		}
