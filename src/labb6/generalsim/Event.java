@@ -22,6 +22,7 @@ public abstract class Event implements Comparable<Event> {
 
     /**
      * En getter som returnerar tiden då en händelse inträffar.
+     * 
      * @return tiden då en händelse sker
      */
     public double getTime() {

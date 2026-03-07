@@ -75,13 +75,13 @@ public class CarWashState extends State {
 		return freeSlowWash;
 	}
 
-	private void occupyFastWash() {
+	void occupyFastWash() {
 		if (getFreeFastWash() != 0) {
 			freeFastWash--;
 		}
 	}
 
-	private void occupySlowWash() {
+	void occupySlowWash() {
 		if (getFreeSlowWash() != 0) {
 			freeSlowWash--;
 		}
