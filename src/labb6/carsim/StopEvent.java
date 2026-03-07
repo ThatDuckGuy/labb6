@@ -8,4 +8,7 @@ public class StopEvent extends Event{
 		super(time); //skickar tidpunk. till Event så prioq kan sortera på rätt plats
 	}
     
+	public void execute(Simulator sim) {
+		sim.getState().stop(); //anropar stop som finns i state för att stoppa simulatorn
+	}
 }
