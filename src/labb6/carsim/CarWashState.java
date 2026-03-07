@@ -18,6 +18,10 @@ public class CarWashState extends State {
 	private final double carInterval;
 	private Queue<Car> carQueue;
 	CarFactory carFactory;
+	private double carwashIdleTime;
+	private double totalQueueTime, meanQueueTime;
+	private int rejectedCars, carsRemoved;
+	private double lastEventTime;
 
 	/**
 	 * Skapar ett nytt tillstånd för en biltvätts simulation och initierar värden
@@ -44,8 +48,13 @@ public class CarWashState extends State {
 		this.fastWashTime = fastWashTime;
 		this.carInterval = carInterval;
 		this.seed = seed;
-		carQueue = new LinkedList<Car>();
-		carFactory = new CarFactory();
+		this.carQueue = new LinkedList<Car>();
+		this.carFactory = new CarFactory();
+		this.totalQueueTime = 0.0;
+		this.meanQueueTime = 0.0;
+		this.rejectedCars = 0;
+		this.carsRemoved = 0;
+		this.lastEventTime = 0;
 	}
 
 	/**
@@ -75,17 +84,19 @@ public class CarWashState extends State {
 	 * 
 	 * @return en bil
 	 */
-	private Car createCar() {
+	Car createCar() {
 		return carFactory.createCar(getCurrentTime());
 	}
 
 	/**
 	 * Lägger till en bil till kön ifall kön inte är full.
 	 */
-	private void addCar() {
+	void addCar() {
 		// Adds a car to carQueue if there is space
 		if (!(carQueueIsFull())) {
 			carQueue.add(createCar());
+		} else {
+			rejectedCars++;
 		}
 	}
 
@@ -96,18 +107,73 @@ public class CarWashState extends State {
 	 * 
 	 */
 	public Car getFirstCar() { // Metoden behövs kaske inte
-		return carQueue.peek();
+		if (!(carQueueIsEmpty())) {
+			return carQueue.peek();
+		}
+
+		return null;
+
 	}
 
 	/**
-	 * Tar bort och returnerar den bil som var först i kön.
+	 * Tar bort och returnerar den bil som var först i kön. Samt ökar antalet
+	 * servade bilar
 	 * 
 	 * @return den bil som var först i kön.
 	 */
-	public Car getRemoveCar() {
-		return carQueue.remove();
+	public Car RemoveCar() {
+		Car currentCar = carQueue.poll();
+
+		if (currentCar != null) {
+			carsRemoved++;
+
+			updateWaitTime(currentCar);
+
+			return currentCar;
+		}
+		return null;
 	}
 
+	/**
+	 * Beräknar den totala kötiden och medel kö tiden. Kallas varje gång en bil
+	 * lämnar kön.
+	 * 
+	 * @param currentCar den bil som lämnar kön
+	 */
+	void updateWaitTime(Car currentCar) {
+		double carQueueTime = getCurrentTime() - currentCar.getArrivalTime();
+		totalQueueTime += carQueueTime;
+		meanQueueTime = totalQueueTime / carsRemoved;
+	}
+
+	/**
+	 * Beräknar mängden idle time per biltvätt som skapats mellan två event. Denna
+	 * metod ska kallas först vid varje event.
+	 */
+	void updateIdleTime() {
+		double timeBetweenEvent = getCurrentTime() - lastEventTime;
+
+		int idleCarWashes = freeFastWash + freeSlowWash;
+
+		carwashIdleTime += idleCarWashes * timeBetweenEvent;
+
+		lastEventTime = getCurrentTime();
+	}
+	/**
+	 * Medelar observatörer att state har ändrats.
+	 */
+	public void update() {
+		setChanged();
+		notifyObservers();
+	}
+	
+	/**
+	 * Hämtar mängden tid som biltvättar inte används
+	 * @return
+	 */
+	public double getIdleTime() {
+		return carwashIdleTime;
+	}
 	/**
 	 * Hämtar det tids intervall det kan ta att tvätta en bil i en snabb biltvätt.
 	 * 
@@ -170,7 +236,7 @@ public class CarWashState extends State {
 	 * Ökar antalet lediga snabba biltvättar med 1 ifall mänden inte överskrider
 	 * antalet existerande snabba biltvättar
 	 */
-	private void freeUpFastWash() {
+	void freeUpFastWash() {
 		if (getFreeFastWash() < fastWash) {
 			freeFastWash++;
 		}
@@ -194,7 +260,7 @@ public class CarWashState extends State {
 	public double getCarInterval() {
 		return carInterval;
 	}
-	
+
 	/**
 	 * Hämtar startvärdet som slumptalsgeneratorerna använder.
 	 * 
@@ -203,6 +269,5 @@ public class CarWashState extends State {
 	public int getSeed() {
 		return seed;
 	}
-	// NEXT HOW WILL CARWASH VIEW GET ACCESS TO THE CHANGES THE EVENT DOES. HOW WILL
-	// IT GET AVERAGE WAITING TIME???
+
 }

@@ -8,6 +8,9 @@ public class CarFactory {
 		numberOfCars = 0;
 	}
 	
+	public int getNumberOfCars(){
+		return numberOfCars;
+	}
 	 	Car createCar(double arrivalTime) {
 		Car temp = new Car(numberOfCars, arrivalTime);
 		numberOfCars++;
