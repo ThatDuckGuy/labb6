@@ -1,5 +1,8 @@
 package labb6.carsim;
 
+/**
+ * 
+ */
 public class Car{
 	private int id;
 	private double arrivalTime;
