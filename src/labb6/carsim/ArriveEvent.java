@@ -31,15 +31,48 @@ public class ArriveEvent extends Event {
 
         Car car = state.createCar();
         washOrQueue(state, car);
+        nextArrival(state);
+        state.update();
     }
 
     private void washOrQueue(CarWashState state, Car car) {
         if (state.getFreeFastWash() > 0) {
-            state.occupyFastWash();
+            washCar(state, car, true);
         } else if (state.getFreeSlowWash() > 0) {
-            state.occupySlowWash();
+            washCar(state, car, false);
         } else {
             state.addCar();
         }
+    }
+
+    private void washCar(CarWashState state, Car car, boolean isFastWash) {
+        double leaveTime;
+
+        if (isFastWash) {
+            leaveTime = nextFastTime(state);
+            state.occupyFastWash();
+        } else {
+            leaveTime = nextSlowTime(state);
+            state.occupySlowWash();
+        }
+
+        simulator.addEvent(new LeaveEvent(leaveTime, car, isFastWash, simulator));
+    }
+
+    private void nextArrival(CarWashState state) {
+        simulator.addEvent(
+                new ArriveEvent(nextArrivalTime(state), simulator, arrivalStream, fastWashStream, slowWashStream));
+    }
+
+    private double nextArrivalTime(CarWashState state) {
+        return state.getCurrentTime() + arrivalStream.next();
+    }
+
+    private double nextFastTime(CarWashState state) {
+        return state.getCurrentTime() + fastWashStream.next();
+    }
+
+    private double nextSlowTime(CarWashState state) {
+        return state.getCurrentTime() + slowWashStream.next();
     }
 }
