@@ -1,6 +1,6 @@
 package labb6.carsim;
 
-import labb6.generalsim.Simulator;
+import labb6.generalsim.EventQueue;
 import labb6.generalsim.State;
 
 /**
@@ -21,11 +21,11 @@ public class LeaveEvent extends CarWashEvent {
      * @param time       tiden då bilen lämnar biltvätten
      * @param car        bilen som lämnat
      * @param isFastWash sann om bilen tvättades i en snabb maskin
-     * @param simulator  simulatorn som events sker i
+     * @param eventQueue simulatorn som events sker i
      * @param washTime   används för att beräkna tiden för olika events
      */
-    public LeaveEvent(double time, Car car, boolean isFastWash, Simulator simulator, WashTime washTime) {
-        super(time, simulator, washTime);
+    public LeaveEvent(double time, Car car, boolean isFastWash, EventQueue eventQueue, WashTime washTime) {
+        super(time, eventQueue, washTime);
         this.isFastWash = isFastWash;
         this.car = car;
     }
@@ -33,7 +33,7 @@ public class LeaveEvent extends CarWashEvent {
     /**
      * Effekten som LeaveEvent har på state.
      *
-     * @param s simuleringens nuvarande tillstånd (castas som CarWashState)
+     * @param s simuleringens nuvarande tillstånd (castas till CarWashState)
      */
     @Override
     public void occur(State s) {

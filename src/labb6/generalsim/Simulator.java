@@ -9,7 +9,7 @@ import java.util.PriorityQueue;
  *
  * @author Samatchaya Onpad
  */
-public class Simulator {
+public class Simulator implements EventQueue {
 
     private final State state;
     private final PriorityQueue<Event> eventQueue;
