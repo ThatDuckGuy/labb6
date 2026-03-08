@@ -12,19 +12,22 @@ import labb6.generalsim.State;
  */
 public class LeaveEvent extends CarWashEvent {
 
+    private final Car car;
     private final boolean isFastWash;
 
     /**
      * Skapar ett LeaveEvent vid en given tid.
      *
      * @param time       tiden då bilen lämnar biltvätten
+     * @param car        bilen som lämnat
      * @param isFastWash sann om bilen tvättades i en snabb maskin
      * @param simulator  simulatorn som events sker i
      * @param washTime   används för att beräkna tiden för olika events
      */
-    public LeaveEvent(double time, boolean isFastWash, Simulator simulator, WashTime washTime) {
+    public LeaveEvent(double time, Car car, boolean isFastWash, Simulator simulator, WashTime washTime) {
         super(time, simulator, washTime);
         this.isFastWash = isFastWash;
+        this.car = car;
     }
 
     /**

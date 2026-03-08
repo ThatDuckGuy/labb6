@@ -45,7 +45,7 @@ public abstract class CarWashEvent extends Event {
             leaveTime = washTime.nextSlow(state.getCurrentTime());
             state.occupySlowWash();
         }
-        LeaveEvent nextLeaveEvent = new LeaveEvent(leaveTime, isFastWash, simulator, washTime);
+        LeaveEvent nextLeaveEvent = new LeaveEvent(leaveTime, car, isFastWash, simulator, washTime);
         simulator.addEvent(nextLeaveEvent);
     }
 }
