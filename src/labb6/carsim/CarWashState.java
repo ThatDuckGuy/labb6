@@ -141,8 +141,8 @@ public class CarWashState extends State {
 		double timeBetweenEvent = getCurrentTime() - lastEventTime;
 
 		totalQueueTime += timeBetweenEvent * carQueue.size();
-		if (carFactory.getNumberOfCars()-rejectedCars > 0) {
-			meanQueueTime = totalQueueTime / (carFactory.getNumberOfCars()-rejectedCars);
+		if (carFactory.getNumberOfCars() - rejectedCars > 0) {
+			meanQueueTime = totalQueueTime / (carFactory.getNumberOfCars() - rejectedCars);
 		}
 
 		int idleCarWashes = freeFastWash + freeSlowWash;
@@ -153,11 +153,15 @@ public class CarWashState extends State {
 	}
 
 	/**
-	 * Medelar observatörer att state har ändrats.
+	 * Medelar observatörer att state har ändrats och skickar med vilken typ av
+	 * event som påverkade state.
+	 * 
+	 * @param typeOfEvent namnet på typen av event som påverkade state.
 	 */
-	public void update(String typeOfEvent) {
-		setChanged();
-		notifyObservers(typeOfEvent);
+	@Override
+	public void update(Object typeOfEvent) {
+		super.update(typeOfEvent);
+
 	}
 
 	/**

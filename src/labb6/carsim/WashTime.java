@@ -35,7 +35,7 @@ public class WashTime {
      * @param currentTime simuleringens nuvarande tid
      * @return tidpunkten då nästa bil anländer
      */
-    double nextArrival(double currentTime) {
+    public double nextArrival(double currentTime) {
         return currentTime + arrivalStream.next();
     }
 
@@ -45,7 +45,7 @@ public class WashTime {
      * @param currentTime simuleringens nuvarande tid
      * @return tidpunkten då bilen lämnar den snabba maskinen
      */
-    double nextFast(double currentTime) {
+    public double nextFast(double currentTime) {
         return currentTime + fastWashStream.next();
     }
 

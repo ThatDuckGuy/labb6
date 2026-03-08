@@ -28,8 +28,9 @@ public class StopEvent extends Event {
     @Override
     public void occur(State s) {
 		CarWashState state = (CarWashState) s; // cast för hålla allmänna simulatorn separat
-
-        state.updateSimView();
+		state.setCurrentTime(getTime());
+		state.updateStatistics();
+        state.update("Stop");
         state.stop();
     }
 }
