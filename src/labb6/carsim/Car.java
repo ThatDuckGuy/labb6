@@ -1,12 +1,12 @@
 package labb6.carsim;
 
 /**
- * 
+ * Representerar bilar som åker in i biltvätten. Varje bil har ett id och
  */
 public class Car {
 	private int id;
-	private double arrivalTime;
-
+	private double arrivalTime; // Behövs förmodligen inte längre
+	
 	Car(int id, double arrivalTime) {
 		this.id = id;
 		this.arrivalTime = arrivalTime;
@@ -17,7 +17,7 @@ public class Car {
 	 * 
 	 * @return tiden bilen kom till biltvätten
 	 */
-	public double getArrivalTime() {
+	public double getArrivalTime() { // Behövs förmodligen inte längre
 		return arrivalTime;
 	}
 
