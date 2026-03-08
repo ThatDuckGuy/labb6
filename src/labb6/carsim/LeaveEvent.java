@@ -37,7 +37,7 @@ public class LeaveEvent extends CarWashEvent {
         CarWashState state = (CarWashState) s;
         state.updateStatistics();
         serveOrFree(state);
-        state.update();
+        state.update("Leave");
     }
 
     /**
