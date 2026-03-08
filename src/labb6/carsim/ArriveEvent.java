@@ -1,32 +1,26 @@
 package labb6.carsim;
 
-import labb6.ExponentialRandomStream;
-import labb6.UniformRandomStream;
 import labb6.generalsim.Event;
 import labb6.generalsim.Simulator;
 import labb6.generalsim.State;
 
 public class ArriveEvent extends Event {
 
-	private final Simulator simulator;
-	private final ExponentialRandomStream arrivalStream;
-	private final UniformRandomStream fastWashStream;
-	private final UniformRandomStream slowWashStream;
+	 private final Simulator simulator;
+	    private final WashTime washTime;
 
-	public ArriveEvent(double time, Simulator simulator, ExponentialRandomStream arrivalStream,
-			UniformRandomStream fastWashStream, UniformRandomStream slowWashStream) {
-		super(time);
-		this.simulator = simulator;
-		this.arrivalStream = arrivalStream;
-		this.fastWashStream = fastWashStream;
-		this.slowWashStream = slowWashStream;
-	}
+	    public ArriveEvent(double time, Simulator simulator, WashTime washTime) {
+	        super(time);
+	        this.simulator = simulator;
+	        this.washTime = washTime;
+	    }
 
 	@Override
 	public void occur(State s) {
 		CarWashState state = (CarWashState) s; // cast för hålla allmänna simulatorn separat
 		state.setCurrentTime(getTime());
 		state.updateStatistics();
+    
 
 		Car car = state.createCar();
 		state.setCurrentCarId(car);
@@ -51,32 +45,20 @@ public class ArriveEvent extends Event {
 
 	private void washCar(CarWashState state, Car car, boolean isFastWash) {
 		double leaveTime;
+        if (isFastWash) {
+            leaveTime = washTime.nextFast(state.getCurrentTime());
+            state.occupyFastWash();
+        } else {
+            leaveTime = washTime.nextSlow(state.getCurrentTime());
+            state.occupySlowWash();
+        }
 
-		if (isFastWash) {
-			leaveTime = nextFastTime(state);
-			state.occupyFastWash();
-		} else {
-			leaveTime = nextSlowTime(state);
-			state.occupySlowWash();
-		}
+        simulator.addEvent(new LeaveEvent(leaveTime, car, isFastWash, simulator, washTime));
+    }
 
-		simulator.addEvent(new LeaveEvent(leaveTime, car, isFastWash, simulator));
-	}
 
-	private void nextArrival(CarWashState state) {
-		simulator.addEvent(
-				new ArriveEvent(nextArrivalTime(state), simulator, arrivalStream, fastWashStream, slowWashStream));
-	}
-
-	private double nextArrivalTime(CarWashState state) {
-		return state.getCurrentTime() + arrivalStream.next();
-	}
-
-	private double nextFastTime(CarWashState state) {
-		return state.getCurrentTime() + fastWashStream.next();
-	}
-
-	private double nextSlowTime(CarWashState state) {
-		return state.getCurrentTime() + slowWashStream.next();
-	}
+    private void nextArrival(CarWashState state) {
+        simulator.addEvent(new ArriveEvent(washTime.nextArrival(state.getCurrentTime()),
+                simulator, washTime));
+    }
 }
