@@ -53,15 +53,14 @@ public class ArriveEvent extends CarWashEvent {
      * @param car   bilen som anlänt
      */
 	private void serveOrQueue(CarWashState state, Car car) {
-		
-		if (state.getFreeFastWash() > 0) {
-			washCar(state, car, true);
-		} else if (state.getFreeSlowWash() > 0) {
-			washCar(state, car, false);
-		} else {
-			state.addCar(car);
-		}
-	}
+        if (state.getFreeFastWash() > 0) {
+            assignCarToMachine(state, car, true);
+        } else if (state.getFreeSlowWash() > 0) {
+            assignCarToMachine(state, car, false);
+        } else {
+        	state.addCar(car);
+        }
+    }
 
 
 
