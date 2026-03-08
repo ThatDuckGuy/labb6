@@ -38,7 +38,9 @@ public class LeaveEvent extends CarWashEvent {
     @Override
     public void occur(State s) {
         CarWashState state = (CarWashState) s;
+        state.setCurrentTime(getTime());
         state.updateStatistics();
+        state.setCurrentCarId(car);
         state.update("Leave");
         serveOrFree(state);
     }
