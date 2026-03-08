@@ -1,7 +1,7 @@
 package labb6.carsim;
 
 import labb6.generalsim.Event;
-import labb6.generalsim.Simulator;
+import labb6.generalsim.EventQueue;
 
 /**
  * Abstrakt klass som representerar ett event relaterat till biltvätten.
@@ -11,20 +11,20 @@ import labb6.generalsim.Simulator;
  */
 public abstract class CarWashEvent extends Event {
 
-    protected final Simulator simulator;
+    protected final EventQueue eventQueue;
     protected final WashTime washTime;
 
     /**
      * Konstruktor för CarWashEvent. Används för att skapa
      * gemensamma fält, och för att behålla arvshirarkin.
      *
-     * @param time      tiden då händelsen inträffar
-     * @param simulator simulatorn som events läggs till i
-     * @param washTime  används för att beräkna tiden för olika events
+     * @param time       tiden då händelsen inträffar
+     * @param eventQueue simulatorn som events läggs till i
+     * @param washTime   används för att beräkna tiden för olika events
      */
-    public CarWashEvent(double time, Simulator simulator, WashTime washTime) {
+    public CarWashEvent(double time, EventQueue eventQueue, WashTime washTime) {
         super(time);
-        this.simulator = simulator;
+        this.eventQueue = eventQueue;
         this.washTime = washTime;
     }
 
@@ -45,7 +45,7 @@ public abstract class CarWashEvent extends Event {
             leaveTime = washTime.nextSlow(state.getCurrentTime());
             state.occupySlowWash();
         }
-        LeaveEvent nextLeaveEvent = new LeaveEvent(leaveTime, car, isFastWash, simulator, washTime);
-        simulator.addEvent(nextLeaveEvent);
+        LeaveEvent nextLeaveEvent = new LeaveEvent(leaveTime, car, isFastWash, eventQueue, washTime);
+        eventQueue.addEvent(nextLeaveEvent);
     }
 }
