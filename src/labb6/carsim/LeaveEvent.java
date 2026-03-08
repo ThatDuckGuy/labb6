@@ -1,51 +1,69 @@
 package labb6.carsim;
 
-import labb6.generalsim.Event;
 import labb6.generalsim.Simulator;
 import labb6.generalsim.State;
 
-public class LeaveEvent extends Event {
+/**
+ * Ett event som representerar att en bil lämnar biltvätten.
+ * Om det finns bilar i kön tilldelas nästa bil direkt till den frigjorda maskinen,
+ * annars blir maskinen ledig.
+ *
+ * @author Hugo Igelström
+ */
+public class LeaveEvent extends CarWashEvent {
 
-    private final Car car;
     private final boolean isFastWash;
-    private final Simulator simulator;
-    private final WashTime washTime;
 
-    public LeaveEvent(double time, Car car, boolean isFastWash, Simulator simulator, WashTime washTime) {
-        super(time);
-        this.car = car;
+    /**
+     * Skapar ett LeaveEvent vid en given tid.
+     *
+     * @param time       tiden då bilen lämnar biltvätten
+     * @param isFastWash sann om bilen tvättades i en snabb maskin
+     * @param simulator  simulatorn som events sker i
+     * @param washTime   används för att beräkna tiden för olika events
+     */
+    public LeaveEvent(double time, boolean isFastWash, Simulator simulator, WashTime washTime) {
+        super(time, simulator, washTime);
         this.isFastWash = isFastWash;
-        this.simulator = simulator;
-        this.washTime = washTime;
     }
 
+    /**
+     * Effekten som LeaveEvent har på state.
+     *
+     * @param s simuleringens nuvarande tillstånd (castas som CarWashState)
+     */
     @Override
     public void occur(State s) {
         CarWashState state = (CarWashState) s;
         state.updateStatistics();
+        serveOrFree(state);
+        state.update();
+    }
 
+    /**
+     * Om det finns bilar i kön tilldelas nästa bil direkt till den frigjorda maskinen,
+     * annars blir maskinen ledig.
+     *
+     * @param state simuleringens nuvarande tillstånd (efter cast)
+     */
+    private void serveOrFree(CarWashState state) {
+        if (!state.carQueueIsEmpty()) {
+            assignCarToMachine(state, state.RemoveCar(), isFastWash);
+        } else {
+            freeMachine(state);
+        }
+    }
+
+    /**
+     * Markerar maskinen som ledig.
+     *
+     * @param state simuleringens nuvarande tillstånd (efter cast)
+     */
+    private void freeMachine(CarWashState state) {
         if (isFastWash) {
             state.freeUpFastWash();
         } else {
             state.freeUpSlowWash();
-        }
-
-        serveNextInQueue(state);
-        state.update();
-    }
-
-    private void serveNextInQueue(CarWashState state) {
-        if (!state.carQueueIsEmpty()) {
-            Car nextCar = state.RemoveCar();
-            double leaveTime;
-            if (isFastWash) {
-                leaveTime = washTime.nextFast(state.getCurrentTime());
-                state.occupyFastWash();
-            } else {
-                leaveTime = washTime.nextSlow(state.getCurrentTime());
-                state.occupySlowWash();
-            }
-            simulator.addEvent(new LeaveEvent(leaveTime, nextCar, isFastWash, simulator, washTime));
         }
     }
 }

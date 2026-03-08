@@ -1,55 +1,70 @@
 package labb6.carsim;
 
-import labb6.generalsim.Event;
 import labb6.generalsim.Simulator;
 import labb6.generalsim.State;
 
-public class ArriveEvent extends Event {
+/**
+ * Ett event som representerar att en bil anländer till biltvätten.
+ * Om det finns en ledig maskin skickas bilen dit, annars ställs den i kön.
+ * Efter ankomsten skapas nästa ArriveEvent.
+ *
+ * @author Hugo Igelström
+ */
+public class ArriveEvent extends CarWashEvent {
 
-    private final Simulator simulator;
-    private final WashTime washTime;
-
+    /**
+     * Skapar ett ArriveEvent vid en given tid.
+     *
+     * @param time      tiden då bilen anländer
+     * @param simulator simulatorn som events sker i
+     * @param washTime  används för att beräkna tiden för olika events
+     */
     public ArriveEvent(double time, Simulator simulator, WashTime washTime) {
-        super(time);
-        this.simulator = simulator;
-        this.washTime = washTime;
+        super(time, simulator, washTime);
     }
 
+    /**
+     * Effekten som ArriveEvent har på state.
+     * 
+     * @param s simuleringens nuvarande tillstånd (castas som CarWashState).
+     */
     @Override
     public void occur(State s) {
-        CarWashState state = (CarWashState) s;
+        CarWashState state = (CarWashState) s; // behåller separation mellan generalsim och carsim
         state.updateStatistics();
-
         Car car = state.createCar();
-        washOrQueue(state, car);
+
+        serveOrQueue(state, car);
         nextArrival(state);
         state.update();
     }
 
-    private void washOrQueue(CarWashState state, Car car) {
+    /**
+     * Skickar bilen till en ledig maskin om det finns,
+     * annars läggs bilen till i kön eller avvisas.
+     *
+     * @param state simuleringens nuvarande tillstånd (efter cast)
+     * @param car   bilen som anlänt
+     */
+    private void serveOrQueue(CarWashState state, Car car) {
         if (state.getFreeFastWash() > 0) {
-            washCar(state, car, true);
+            assignCarToMachine(state, car, true);
         } else if (state.getFreeSlowWash() > 0) {
-            washCar(state, car, false);
+            assignCarToMachine(state, car, false);
         } else {
             state.addCar();
         }
     }
 
-    private void washCar(CarWashState state, Car car, boolean isFastWash) {
-        double leaveTime;
-        if (isFastWash) {
-            leaveTime = washTime.nextFast(state.getCurrentTime());
-            state.occupyFastWash();
-        } else {
-            leaveTime = washTime.nextSlow(state.getCurrentTime());
-            state.occupySlowWash();
-        }
-        simulator.addEvent(new LeaveEvent(leaveTime, car, isFastWash, simulator, washTime));
-    }
-
+    /**
+     * Skapar nästa ArriveEvent.
+     *
+     * @param state simuleringens nuvarande tillstånd (efter cast)
+     */
     private void nextArrival(CarWashState state) {
-        simulator.addEvent(new ArriveEvent(washTime.nextArrival(state.getCurrentTime()),
-                simulator, washTime));
+        Double arriveTime = washTime.nextArrival(state.getCurrentTime());
+        ArriveEvent nextWash = new ArriveEvent(arriveTime, simulator, washTime);
+
+        simulator.addEvent(nextWash);
     }
 }
