@@ -3,6 +3,8 @@ package labb6.carsim;
 /**
  * Skapar instanser av klassen bil, samt håller koll på hur många bjlar som har
  * skapats.
+ * 
+ * @author Karl Grahn
  */
 public class CarFactory {
 	private int numberOfCars;
@@ -22,8 +24,10 @@ public class CarFactory {
 	public int getNumberOfCars() {
 		return numberOfCars;
 	}
+
 	/**
 	 * Skapar en bil och returnerar bilen.
+	 * 
 	 * @param arrivalTime tiden då bilen skapades.
 	 * @return en bil
 	 */

@@ -9,6 +9,8 @@ import labb6.generalsim.State;
 /**
  * Vy för biltvättssimuleringen, tar förändringar i CarWashState och skriver ut
  * information om varje händelse samt slutstatistik.
+ * 
+ * @author Karl Grahn
  */
 public class CarSimView extends SimView {
 	private CarWashState state;

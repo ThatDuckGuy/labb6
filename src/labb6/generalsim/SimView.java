@@ -4,29 +4,29 @@ import java.util.Observable;
 import java.util.Observer;
 
 /**
- * En abstrakt klassen är en observer som observerar ett object av typen state. Klassens
- * används för att visualisera förändringar i state.
+ * En abstrakt klassen är en observer som observerar ett object av typen state.
+ * Klassens används för att visualisera förändringar i state.
+ * 
+ * @author Karl Grahn
  * 
  */
 public abstract class SimView implements Observer {
 	private State state;
 
 	/**
-	 * Skapar en vy och kopplar den till ett givet state
-	 * som ska observeras.
+	 * Skapar en vy och kopplar den till ett givet state som ska observeras.
 	 * 
-	 * @param state staten som vyn ska observera. 
+	 * @param state staten som vyn ska observera.
 	 */
 	public SimView(State state) {
 		this.state = state;
 		state.addObserver(this);
 	}
-	
+
 	/**
-	 * Kallas då en förändring sker i state och ska 
-	 * presentera relevant information vid förändringen.
+	 * Kallas då en förändring sker i state och ska presentera relevant information
+	 * vid förändringen.
 	 */
 	public abstract void update(Observable o, Object args);
-
 
 }

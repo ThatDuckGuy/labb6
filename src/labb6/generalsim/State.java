@@ -7,6 +7,8 @@ import java.util.ArrayList;
  * En abstrakt klass som nvänds för att beskriva tillståndet i en simulering.
  * Klassen är en observable och kommer den att informera observerare då
  * någonting förändras. Klassen kommer att förändras genom events.
+ * 
+ * @author Karl Grahn
  */
 public abstract class State extends Observable {
 	private boolean running;
@@ -14,6 +16,8 @@ public abstract class State extends Observable {
 
 	/**
 	 * Skapar ett state för en simulation. Sätter start tiden till 0.
+	 * 
+	 * @author Karl Grahn
 	 */
 	public State() {
 		running = true;
@@ -48,7 +52,7 @@ public abstract class State extends Observable {
 	 * Medelar observerare då något förändrats i state och skickar med en parameter
 	 * med relevant data.
 	 * 
-	 * @param arg information relevant för simView.
+	 * @param arg information relevant för en observatör.
 	 */
 	public void update(Object arg) {
 		setChanged();

@@ -5,6 +5,8 @@ import labb6.*;
 
 /**
  * Startar en biltvätts simulator. Simulationen startas med ett arrive event.
+ * 
+ * @author Karl Grahn
  */
 public class Main {
 

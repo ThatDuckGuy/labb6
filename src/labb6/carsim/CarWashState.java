@@ -8,6 +8,8 @@ import labb6.generalsim.State;
  * Klassen ärver state och representerar tillståndet i en biltvätts simulering.
  * Tillståndet kan endast förändras genom events.
  * 
+ * @author Karl Grahn
+ * 
  */
 public class CarWashState extends State {
 	private final int fastWash, slowWash; // Amounts of carwashes
