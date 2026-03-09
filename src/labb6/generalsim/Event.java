@@ -3,7 +3,7 @@ package labb6.generalsim;
 /**
  * Abstrakt klass som representerar en generell händelse i simuleringen. Varje
  * händelse har en tid när händelsen inträffar, och varje händelse påverkar
- * state. Händelser ordnas utifrån denna tid genom {@Code comparable}.
+ * state. Händelser ordnas utifrån denna tid genom .
  *
  * @author Hugo Igelström
  */

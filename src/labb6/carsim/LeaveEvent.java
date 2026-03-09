@@ -41,7 +41,7 @@ public class LeaveEvent extends CarWashEvent {
 		state.setCurrentTime(getTime());
 		state.updateStatistics();
 		state.setCurrentCarId(car);
-
+		state.update("Leave");
 		serveOrFree(state);
 	}
 

@@ -2,6 +2,10 @@ package labb6;
 
 import java.util.Random;
 
+/**
+ * 
+ */
+
 public class ExponentialRandomStream {
 
 	private Random rand;

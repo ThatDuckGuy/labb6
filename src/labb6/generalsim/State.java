@@ -16,8 +16,6 @@ public abstract class State extends Observable {
 
 	/**
 	 * Skapar ett state för en simulation. Sätter start tiden till 0.
-	 * 
-	 * @author Karl Grahn
 	 */
 	public State() {
 		running = true;
@@ -38,14 +36,6 @@ public abstract class State extends Observable {
 	 */
 	public void stop() {
 		running = false;
-	}
-
-	/**
-	 * Medelar observerare då något förändrats i state.
-	 */
-	public void update() {
-		setChanged();
-		notifyObservers();
 	}
 
 	/**

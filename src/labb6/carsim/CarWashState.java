@@ -106,21 +106,6 @@ public class CarWashState extends State {
 	}
 
 	/**
-	 * Kollar vilken bil som är först i kön.
-	 * 
-	 * @return den bil som är först i kön.
-	 * 
-	 */
-	public Car getFirstCar() { // Metoden behövs kaske inte
-		if (!(carQueueIsEmpty())) {
-			return carQueue.peek();
-		}
-
-		return null;
-
-	}
-
-	/**
 	 * Tar bort och returnerar den bil som var först i kön.
 	 * 
 	 * @return den bil som var först i kön eller null ifall kön var tom.
@@ -171,7 +156,7 @@ public class CarWashState extends State {
 	 * 
 	 * @return den sammanlagda tiden som biltvättar står tomma.
 	 */
-	public double getIdleTime() {
+	double getIdleTime() {
 		return carwashIdleTime;
 	}
 
@@ -180,7 +165,7 @@ public class CarWashState extends State {
 	 * 
 	 * @return den sammanlagda kötiden för alla bilar.
 	 */
-	public double getQueueTime() {
+	double getQueueTime() {
 		return totalQueueTime;
 	}
 
@@ -189,7 +174,7 @@ public class CarWashState extends State {
 	 * 
 	 * @return max längden på kön.
 	 */
-	public int getQueueLength() {
+	int getQueueLength() {
 		return queueLength;
 	}
 
@@ -198,7 +183,7 @@ public class CarWashState extends State {
 	 * 
 	 * @return mängden bilar i bilkön.
 	 */
-	public int getCurrentQueueLength() {
+	int getCurrentQueueLength() {
 		return carQueue.size();
 	}
 
@@ -207,7 +192,7 @@ public class CarWashState extends State {
 	 * 
 	 * @return det relevanta bil id.
 	 */
-	public int getCurrentCarId() {
+	int getCurrentCarId() {
 		return currentCarId;
 	}
 
@@ -225,7 +210,7 @@ public class CarWashState extends State {
 	 * 
 	 * @return medel kötiden.
 	 */
-	public double getMeanQueuTime() {
+	double getMeanQueuTime() {
 		return meanQueueTime;
 	}
 
@@ -234,7 +219,7 @@ public class CarWashState extends State {
 	 * 
 	 * @return mängden bilar som inte fick plats i kön.
 	 */
-	public int getRejectedCars() {
+	int getRejectedCars() {
 		return rejectedCars;
 	}
 
@@ -244,7 +229,7 @@ public class CarWashState extends State {
 	 * @return en array av längd två: index 0 är den undre gränsen och index 1 är
 	 *         den övre gränsen.
 	 */
-	public double[] getFastWashTime() {
+	double[] getFastWashTime() {
 		return fastWashTime;
 	}
 
@@ -254,7 +239,7 @@ public class CarWashState extends State {
 	 * @return en array av längd två: index 0 är den undre gränsen och index 1 är
 	 *         den övre gränsen.
 	 */
-	public double[] getSlowWashTime() {
+	double[] getSlowWashTime() {
 		return slowWashTime;
 	}
 
@@ -263,7 +248,7 @@ public class CarWashState extends State {
 	 * 
 	 * @return mängden snabba biltvättar.
 	 */
-	public int getTotalFastWash() {
+	int getTotalFastWash() {
 		return fastWash;
 	}
 
@@ -272,7 +257,7 @@ public class CarWashState extends State {
 	 * 
 	 * @return mängden långsamma biltvättar.
 	 */
-	public int getTotalSlowWash() {
+	int getTotalSlowWash() {
 		return slowWash;
 	}
 
@@ -281,7 +266,7 @@ public class CarWashState extends State {
 	 * 
 	 * @return mängden lediga snabba biltvättar
 	 */
-	public int getFreeFastWash() {
+	int getFreeFastWash() {
 		return freeFastWash;
 	}
 
@@ -290,7 +275,7 @@ public class CarWashState extends State {
 	 * 
 	 * @return mängden lediga långsamma biltvättar.
 	 */
-	public int getFreeSlowWash() {
+	int getFreeSlowWash() {
 		return freeSlowWash;
 	}
 
